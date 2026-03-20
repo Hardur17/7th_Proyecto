@@ -16,13 +16,13 @@ app.post("/login", (req, res) => {
   const password = req.body.password;
 
   if (!correo || !password) {
-    return res.send("Faltan datos");
+    return res.send("Completa los campos para ingresar");
   }
 
-  if (correo === "admin@test.com" && password === "123456") {
+  if (correo === "testeologin@mail.com" && password === "123456") {
     return res.send("Login correcto");
   } else {
-    return res.send("Credenciales incorrectas");
+    return res.send("Correo o contraseña incorrecta");
   }
 });
 
