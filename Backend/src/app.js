@@ -19,14 +19,14 @@ app.post("/login", (req, res) => {
     return res.send("Completa los campos para ingresar");
   }
 
-  if (correo === "testeologin@mail.com" && password === "123456") {
+  if (correo === "test@mail.com" && password === "123456") {
     return res.send("Login correcto");
   } else {
-    return res.send("Correo o contraseña incorrecta");
+    return res.send("Correo o contraseña incorrectos");
   }
 });
 
-// Levantar servidor
+// prende server
 app.listen(PORT, () => {
   console.log("Servidor corriendo en el puerto " + PORT);
 });
