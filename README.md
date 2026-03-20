@@ -1,3 +1,3 @@
-# 7th_Proyecto
+# Gestión de Eventos y Hackatones
 
 Hola.
