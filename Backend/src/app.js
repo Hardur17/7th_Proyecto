@@ -7,7 +7,7 @@ app.use(express.json());
 
 // Ruta básica
 app.get("/", (req, res) => {
-  res.send("Servidor en linea");
+  res.send("Servidor en línea");
 });
 
 // Login 
