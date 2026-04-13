@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="logo">Gestor de Eventos y Hackatones</div>
+        <nav class="top-nav">
+            <div class="perfil">
+                <span class="nombre-perfil">Usuario</span>
+                <img class="avatar-perfil" alt="Avatar usuario">
+            </div>
+        </nav>
+    </header>
+
+    <aside class="sidebar">
+        <nav class="sidebar-nav">
+            <a href="eventos.html">Eventos y Hackatones</a>
+            <a href="estadisticas.html">Estadísticas</a>
+            <a href="historial.html">Historial de Participaciones</a>
+            <a href="certificados.html">Certificados</a>
+        </nav>
+    </aside>
+
+    <main class="dashboard-main">
+        <section class="page-header">
+            <h1>Historial de Participaciones</h1>
+            <p>Conoce en que eventos y hackatones has participado, conoce el estado de tus participaciones</p>
+        </section>
+
+        <section class="table-card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Evento</th>
+                        <th>Fecha</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th>Resultado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Charla de género</td>
+                        <td> 07/04/2026</td>
+                        <td>Participante</td>
+                        <td><span class="status-pill status-completado">Completado</span></td>
+                        <td>Certificado otorgado</td>
+                    </tr>
+                    <tr>
+                        <td>Gala de Proyectos</td>
+                        <td>22/11/2026</td>
+                        <td>Expositor</td>
+                        <td><span class="status-pill status-completado">Completado</span></td>
+                        <td>En espera</td>
+                    </tr>
+                    <tr>
+                        <td>Competencia de Desarrollo Web</td>
+                        <td>15/06/2026</td>
+                        <td>Participante</td>
+                        <td><span class="status-pill status-pendiente">Pendiente</span></td>
+                        <td>En curso</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+</body>
+</html>
