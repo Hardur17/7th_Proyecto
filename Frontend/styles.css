@@ -1,0 +1,214 @@
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --color-fondo: #f5faff;
+    --color-blanco: #ffffff;
+    --color-azul: #0f62fe;
+    --color-azul-oscuro: #0344c2;
+    --color-amarillo: #ffcc00;
+    --color-gris: #546e7a;
+    --color-texto: #102a43;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--color-texto);
+    background: linear-gradient(135deg, #ffffff 0%, #eef7ff 100%);
+    min-height: 100vh;
+}
+
+.login-page {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+}
+
+.login-panel {
+    width: min(100%, 420px);
+    background: var(--color-blanco);
+    border-radius: 24px;
+    box-shadow: 0 18px 45px rgba(2, 20, 70, 0.18);
+    padding: 2rem;
+    border: 1px solid rgba(15, 98, 254, 0.22);
+}
+
+.brand {
+    font-weight: 700;
+    color: var(--color-azul);
+    font-size: 1.2rem;
+    margin-bottom: 0.6rem;
+}
+
+.login-panel h1 {
+    margin: 0;
+    font-size: 1.85rem;
+    color: #0a273e;
+}
+
+.login-panel p {
+    margin: 0.35rem 0 1.35rem;
+    color: var(--color-gris);
+    line-height: 1.45;
+}
+
+.login-form label {
+    display: block;
+    margin: 0.75rem 0 0.25rem;
+    font-weight: 600;
+}
+
+.login-form input,
+.login-form select {
+    width: 100%;
+    padding: 0.75rem 0.9rem;
+    border-radius: 12px;
+    border: 1px solid #c6d7ee;
+    background: #fff;
+    color: #0f2f50;
+    font-size: 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-form input:focus,
+.login-form select:focus {
+    outline: none;
+    border-color: var(--color-azul);
+    box-shadow: 0 0 0 4px rgba(15, 98, 254, 0.14);
+}
+
+.login-form button {
+    width: 100%;
+    margin-top: 1.35rem;
+    padding: 0.88rem 1rem;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(90deg, var(--color-azul), var(--color-azul-oscuro));
+    color: var(--color-blanco);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-form button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 25px rgba(15, 98, 254, 0.4);
+}
+
+.register-link {
+    margin-top: 1.2rem;
+    text-align: center;
+    color: var(--color-gris);
+    font-size: 0.95rem;
+}
+
+.register-link a {
+    color: var(--color-amarillo);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+    .login-panel {
+        padding: 1.5rem;
+        border-radius: 18px;
+    }
+
+    .login-panel h1 {
+        font-size: 1.55rem;
+    }
+}
+
+.app-header {
+    background: linear-gradient(90deg, var(--color-azul), var(--color-azul-oscuro));
+    color: var(--color-blanco);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 16px rgba(2, 16, 56, 0.22);
+}
+
+.logo {
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.top-nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.perfil {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--color-blanco);
+}
+
+.avatar-perfil {
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    border: 2px solid rgba(255,255,255,0.8);
+}
+
+.sidebar {
+    position: fixed;
+    top: 72px;
+    left: 0;
+    width: 260px;
+    height: calc(100vh - 72px);
+    background: var(--color-blanco);
+    box-shadow: 5px 0 18px rgba(0,0,0,0.12);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 90;
+}
+
+.sidebar-nav a {
+    display: block;
+    text-decoration: none;
+    color: var(--color-azul-oscuro);
+    font-weight: 600;
+    padding: 0.55rem 0.75rem;
+    border-radius: 10px;
+    transition: background 0.2s ease;
+}
+
+.sidebar-nav a:hover {
+    background: rgba(15, 98, 254, 0.08);
+}
+
+.dashboard-main {
+    margin-top: 1rem;
+    padding: 1.25rem;
+    margin-left: 0;
+    transition: margin-left 0.25s ease;
+}
+
+@media (min-width: 900px) {
+    .sidebar {
+        transform: translateX(0);
+    }
+
+    .dashboard-main {
+        margin-left: 280px;
+    }
+}
