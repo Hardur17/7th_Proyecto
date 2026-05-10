@@ -2,6 +2,7 @@ const express = require('express');
 const pool = require('../db');
 
 const verificarToken = require('../middleware/auth.middleware');
+const verificarAdmin = require('../middleware/admin.middleware');
 
 const router = express.Router();
 
@@ -116,6 +117,43 @@ router.put('/:id_evento/cancelar', verificarToken, async (req, res) => {
     } catch (error) {
         res.status(500).json({
             mensaje: 'Error al cancelar inscripción',
+            error: error.message
+        });
+    }
+});
+
+// Marcar asistencia - solo admin
+router.put('/:id_inscripcion/asistencia', verificarToken, verificarAdmin, async (req, res) => {
+    try {
+        const { id_inscripcion } = req.params;
+        const { asistencia } = req.body;
+
+        if (asistencia !== 'asistio' && asistencia !== 'no_asistio') {
+            return res.status(400).json({
+                mensaje: 'La asistencia debe ser asistio o no_asistio'
+            });
+        }
+
+        const [resultado] = await pool.query(
+            `UPDATE inscripciones 
+            SET asistencia = ? 
+            WHERE id_inscripcion = ?`,
+            [asistencia, id_inscripcion]
+        );
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({
+                mensaje: 'Inscripción no encontrada'
+            });
+        }
+
+        res.json({
+            mensaje: 'Asistencia actualizada correctamente'
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            mensaje: 'Error al actualizar asistencia',
             error: error.message
         });
     }
