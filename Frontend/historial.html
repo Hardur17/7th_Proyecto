@@ -29,7 +29,7 @@
     <main class="dashboard-main">
         <section class="page-header">
             <h1>Historial de Participaciones</h1>
-            <p>Conoce en que eventos y hackatones has participado, conoce el estado de tus participaciones</p>
+            <p>Conoce en qué eventos y hackatones has participado y revisa el estado de tus participaciones</p>
         </section>
 
         <section class="table-card">
@@ -38,36 +38,97 @@
                     <tr>
                         <th>Evento</th>
                         <th>Fecha</th>
-                        <th>Rol</th>
-                        <th>Estado</th>
-                        <th>Resultado</th>
+                        <th>Lugar</th>
+                        <th>Inscripción</th>
+                        <th>Asistencia</th>
+                        <th>Estado evento</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>Charla de género</td>
-                        <td> 07/04/2026</td>
-                        <td>Participante</td>
-                        <td><span class="status-pill status-completado">Completado</span></td>
-                        <td>Certificado otorgado</td>
-                    </tr>
-                    <tr>
-                        <td>Gala de Proyectos</td>
-                        <td>22/11/2026</td>
-                        <td>Expositor</td>
-                        <td><span class="status-pill status-completado">Completado</span></td>
-                        <td>En espera</td>
-                    </tr>
-                    <tr>
-                        <td>Competencia de Desarrollo Web</td>
-                        <td>15/06/2026</td>
-                        <td>Participante</td>
-                        <td><span class="status-pill status-pendiente">Pendiente</span></td>
-                        <td>En curso</td>
-                    </tr>
+                <tbody id="historial-lista">
                 </tbody>
             </table>
         </section>
     </main>
+
+    <script>
+        const historialLista = document.getElementById('historial-lista');
+        const nombrePerfil = document.querySelector('.nombre-perfil');
+
+        const token = localStorage.getItem('token');
+        const usuarioGuardado = localStorage.getItem('usuario');
+
+        if (usuarioGuardado) {
+            const usuario = JSON.parse(usuarioGuardado);
+            nombrePerfil.textContent = usuario.nombre;
+        }
+
+        if (!token) {
+            alert('Debes iniciar sesión');
+            window.location.href = 'login.html';
+        }
+
+        function crearEstado(texto) {
+            if (texto === 'inscrito' || texto === 'asistio' || texto === 'finalizado') {
+                return `<span class="status-pill status-completado">${texto}</span>`;
+            }
+
+            if (texto === 'pendiente' || texto === 'activo') {
+                return `<span class="status-pill status-pendiente">${texto}</span>`;
+            }
+
+            return `<span class="status-pill">${texto}</span>`;
+        }
+
+        async function cargarHistorial() {
+            try {
+                const respuesta = await fetch('http://localhost:3000/api/inscripciones/mis-inscripciones', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const inscripciones = await respuesta.json();
+
+                historialLista.innerHTML = '';
+
+                if (inscripciones.length === 0) {
+                    historialLista.innerHTML = `
+                        <tr>
+                            <td colspan="6">No tienes inscripciones registradas.</td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                inscripciones.forEach(item => {
+                    const fecha = new Date(item.fecha_inicio).toLocaleDateString();
+
+                    const fila = document.createElement('tr');
+
+                    fila.innerHTML = `
+                        <td>${item.titulo}</td>
+                        <td>${fecha}</td>
+                        <td>${item.lugar}</td>
+                        <td>${crearEstado(item.estado_inscripcion)}</td>
+                        <td>${crearEstado(item.asistencia)}</td>
+                        <td>${crearEstado(item.estado_evento)}</td>
+                    `;
+
+                    historialLista.appendChild(fila);
+                });
+
+            } catch (error) {
+                historialLista.innerHTML = `
+                    <tr>
+                        <td colspan="6">Error al cargar el historial.</td>
+                    </tr>
+                `;
+                console.error(error);
+            }
+        }
+
+        cargarHistorial();
+    </script>
 </body>
 </html>
