@@ -6,6 +6,7 @@ const authRoutes = require('./routes/auth.routes');
 const eventosRoutes = require('./routes/eventos.routes');
 const inscripcionesRoutes = require('./routes/inscripciones.routes');
 const certificadosRoutes = require('./routes/certificados.routes');
+const estadisticasRoutes = require('./routes/estadisticas.routes');
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/eventos', eventosRoutes);
 app.use('/api/inscripciones', inscripcionesRoutes);
 app.use('/api/certificados', certificadosRoutes);
+app.use('/api/estadisticas', estadisticasRoutes);
 
 const PORT = process.env.PORT || 3000;
 

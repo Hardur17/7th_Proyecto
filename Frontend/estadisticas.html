@@ -28,42 +28,104 @@
 
     <main class="dashboard-main">
         <section class="page-header">
-            <h1>Estadísticas de Participación</h1>
-            <p>Revisa tu historial de participaciones en nuestros eventos</p>
+            <h1>Estadísticas generales</h1>
+            <p>Resumen general de eventos, inscripciones y certificados del sistema</p>
         </section>
 
         <section class="stats-grid">
             <article class="stat-card">
                 <small>Total de eventos</small>
-                <span>12</span>
+                <span id="totalEventos">0</span>
             </article>
+
             <article class="stat-card">
-                <small>Total de hackatones</small>
-                <span>5</span>
+                <small>Eventos activos</small>
+                <span id="eventosActivos">0</span>
             </article>
+
             <article class="stat-card">
-                <small>Horas participadas</small>
-                <span>84</span>
+                <small>Total de inscripciones</small>
+                <span id="totalInscripciones">0</span>
+            </article>
+
+            <article class="stat-card">
+                <small>Certificados generados</small>
+                <span id="certificadosGenerados">0</span>
             </article>
         </section>
 
         <section class="card table-card">
-            <h2>Resumen de categorías</h2>
+            <h2>Resumen del sistema</h2>
             <div class="stats-list">
                 <div class="stat-row">
-                    <span>Desarrollo Web</span>
-                    <strong>7 participaciones</strong>
+                    <span>Eventos registrados en la plataforma</span>
+                    <strong id="resumenEventos">0</strong>
                 </div>
                 <div class="stat-row">
-                    <span>Inteligencia Artificial</span>
-                    <strong>2 participaciones</strong>
+                    <span>Inscripciones realizadas por usuarios</span>
+                    <strong id="resumenInscripciones">0</strong>
                 </div>
                 <div class="stat-row">
-                    <span>Charlas informativas</span>
-                    <strong>5 participaciones</strong>
+                    <span>Certificados emitidos</span>
+                    <strong id="resumenCertificados">0</strong>
                 </div>
             </div>
         </section>
     </main>
+
+    <script>
+        const token = localStorage.getItem('token');
+        const usuarioGuardado = localStorage.getItem('usuario');
+        const nombrePerfil = document.querySelector('.nombre-perfil');
+
+        if (usuarioGuardado) {
+            const usuario = JSON.parse(usuarioGuardado);
+            nombrePerfil.textContent = usuario.nombre;
+
+            if (usuario.rol !== 'admin') {
+                alert('No tienes permisos para ver esta página');
+                window.location.href = 'eventos.html';
+            }
+        }
+
+        if (!token) {
+            alert('Debes iniciar sesión');
+            window.location.href = 'login.html';
+        }
+
+        async function cargarEstadisticas() {
+            try {
+                const respuesta = await fetch('http://localhost:3000/api/estadisticas', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const datos = await respuesta.json();
+
+                if (!respuesta.ok) {
+                    alert(datos.mensaje);
+                    window.location.href = 'eventos.html';
+                    return;
+                }
+
+                document.getElementById('totalEventos').textContent = datos.total_eventos;
+                document.getElementById('eventosActivos').textContent = datos.eventos_activos;
+                document.getElementById('totalInscripciones').textContent = datos.total_inscripciones;
+                document.getElementById('certificadosGenerados').textContent = datos.certificados_generados;
+
+                document.getElementById('resumenEventos').textContent = datos.total_eventos;
+                document.getElementById('resumenInscripciones').textContent = datos.total_inscripciones;
+                document.getElementById('resumenCertificados').textContent = datos.certificados_generados;
+
+            } catch (error) {
+                alert('Error al cargar estadísticas');
+                console.error(error);
+            }
+        }
+
+        cargarEstadisticas();
+    </script>
 </body>
 </html>
