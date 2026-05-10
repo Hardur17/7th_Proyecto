@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Gestor de Eventos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main class="login-page">
+        <section class="login-panel">
+            <div class="brand">Gestor de Eventos y Hackatones</div>
+            <h1>¡Bienvenido!</h1>
+            <p>Inicia sesión para continuar</p>
+            <form class="login-form" action="#" method="post">
+                <label for="usuario">Usuario</label>
+                <input id="usuario" name="usuario" type="text" placeholder="Ingresa tu usuario" required>
+
+                <label for="contrasena">Contraseña</label>
+                <input id="contrasena" name="contrasena" type="password" placeholder="Ingresa tu contraseña" required>
+
+                <label for="rol">Rol</label>
+                <select id="rol" name="rol" required>
+                    <option value="" disabled selected>Elige tu rol</option>
+                    <option value="estudiante">Estudiante</option>
+                    <option value="docente">Docente</option>
+                </select>
+
+                <button type="submit">Iniciar sesión</button>
+            </form>
+
+            <div class="register-link">
+                ¿No tienes cuenta? <a href="register.html">Regístrate ahora</a>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
