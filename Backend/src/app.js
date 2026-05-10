@@ -10,6 +10,7 @@ const pool = require('./db');
 const authRoutes = require('./routes/auth.routes');
 const eventosRoutes = require('./routes/eventos.routes');
 const inscripcionesRoutes = require('./routes/inscripciones.routes');
+const certificadosRoutes = require('./routes/certificados.routes');
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/eventos', eventosRoutes);
 app.use('/api/inscripciones', inscripcionesRoutes);
+app.use('/api/certificados', certificadosRoutes);
 
 const PORT = process.env.PORT || 3000;
 
