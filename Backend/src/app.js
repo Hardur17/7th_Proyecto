@@ -2,6 +2,9 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
+const verificarToken = require('./middleware/auth.middleware');
+const verificarAdmin = require('./middleware/admin.middleware');
+
 const pool = require('./db');
 
 const authRoutes = require('./routes/auth.routes');
@@ -19,6 +22,22 @@ const PORT = process.env.PORT || 3000;
 app.get('/', (req, res) => {
     res.json({
         mensaje: 'Servidor en línea'
+    });
+});
+
+// Ruta protegida para cualquier usuario logueado
+app.get('/api/protegida', verificarToken, (req, res) => {
+    res.json({
+        mensaje: 'Acceso permitido',
+        usuario: req.usuario
+    });
+});
+
+// Ruta protegida solo para admin
+app.get('/api/admin', verificarToken, verificarAdmin, (req, res) => {
+    res.json({
+        mensaje: 'Acceso permitido solo para admin',
+        usuario: req.usuario
     });
 });
 
