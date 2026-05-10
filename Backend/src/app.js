@@ -8,6 +8,7 @@ const verificarAdmin = require('./middleware/admin.middleware');
 const pool = require('./db');
 
 const authRoutes = require('./routes/auth.routes');
+const eventosRoutes = require('./routes/eventos.routes');
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
+app.use('/api/eventos', eventosRoutes);
 
 const PORT = process.env.PORT || 3000;
 
