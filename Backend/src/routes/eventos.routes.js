@@ -69,4 +69,31 @@ router.post('/', verificarToken, verificarAdmin, async (req, res) => {
     }
 });
 
+// Cancelar evento - solo admin
+router.put('/:id/cancelar', verificarToken, verificarAdmin, async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const [resultado] = await pool.query(
+            'UPDATE eventos SET estado = ? WHERE id_evento = ?',
+            ['cancelado', id]
+        );
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({
+                mensaje: 'Evento no encontrado'
+            });
+        }
+
+        res.json({
+            mensaje: 'Evento cancelado correctamente'
+        });
+    } catch (error) {
+        res.status(500).json({
+            mensaje: 'Error al cancelar evento',
+            error: error.message
+        });
+    }
+});
+
 module.exports = router;
