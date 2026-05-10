@@ -1,33 +1,42 @@
-const express = require("express");
+const express = require('express');
+const cors = require('cors');
+require('dotenv').config();
+
+const pool = require('./db');
 
 const app = express();
 
-const PORT = 3000;
-
+app.use(cors());
 app.use(express.json());
 
-// ruta base
-app.get("/", (req, res) => {
-  res.send("Servidor en línea");
+const PORT = process.env.PORT || 3000;
+
+// Ruta de prueba del servidor
+app.get('/', (req, res) => {
+    res.json({
+        mensaje: 'Servidor en línea'
+    });
 });
 
-// ruta de login
-app.post("/login", (req, res) => {
-  const correo = req.body.correo;
-  const password = req.body.password;
+// Ruta para probar conexión con MySQL
+app.get('/test-db', async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT 1 + 1 AS resultado');
 
-  if (!correo || !password) {
-    return res.send("Completa los campos para ingresar");
-  }
+        res.json({
+            mensaje: 'Conexión exitosa con MySQL',
+            resultado: rows[0].resultado
+        });
+    } catch (error) {
+        console.error('Error conectando a MySQL:', error);
 
-  if (correo === "test@mail.com" && password === "123456") {
-    return res.send("Login correcto");
-  } else {
-    return res.send("Correo o contraseña incorrectos");
-  }
+        res.status(500).json({
+            mensaje: 'Error conectando a la base de datos',
+            error: error.message
+        });
+    }
 });
 
-//encender server
 app.listen(PORT, () => {
-  console.log("Servidor corriendo en el puerto " + PORT);
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
