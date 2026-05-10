@@ -90,4 +90,35 @@ router.get('/mis-inscripciones', verificarToken, async (req, res) => {
     }
 });
 
+// Cancelar mi inscripción
+router.put('/:id_evento/cancelar', verificarToken, async (req, res) => {
+    try {
+        const { id_evento } = req.params;
+        const id_usuario = req.usuario.id_usuario;
+
+        const [resultado] = await pool.query(
+            `UPDATE inscripciones 
+            SET estado = ? 
+            WHERE id_usuario = ? AND id_evento = ?`,
+            ['cancelado', id_usuario, id_evento]
+        );
+
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({
+                mensaje: 'Inscripción no encontrada'
+            });
+        }
+
+        res.json({
+            mensaje: 'Inscripción cancelada correctamente'
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            mensaje: 'Error al cancelar inscripción',
+            error: error.message
+        });
+    }
+});
+
 module.exports = router;
