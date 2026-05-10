@@ -13,3 +13,6 @@ Thumbs.db
 # Logs
 *.log
 npm-debug.log*
+
+# Certificados generados
+Backend/certificados/
