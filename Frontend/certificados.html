@@ -100,34 +100,99 @@
             }
         }
 
-        async function generarCertificado(idEvento) {
-            try {
-                const respuesta = await fetch(`http://localhost:3000/api/certificados/${idEvento}`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
+async function descargarPDF(urlCertificado) {
+    try {
+        const respuesta = await fetch(`http://localhost:3000${urlCertificado}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
 
-                const datos = await respuesta.json();
+        if (!respuesta.ok) {
+            alert('No se pudo descargar el certificado');
+            return;
+        }
 
-                if (respuesta.ok) {
-                    if (datos.codigo_certificado) {
-                        alert(`Certificado generado correctamente. Código: ${datos.codigo_certificado}`);
-                    } else if (datos.certificado) {
-                        alert(`Certificado ya generado. Código: ${datos.certificado.codigo_certificado}`);
-                    } else {
-                        alert(datos.mensaje);
-                    }
+        const archivo = await respuesta.blob();
+        const url = window.URL.createObjectURL(archivo);
+
+        const enlace = document.createElement('a');
+        enlace.href = url;
+        enlace.download = 'certificado.pdf';
+        document.body.appendChild(enlace);
+        enlace.click();
+
+        document.body.removeChild(enlace);
+        window.URL.revokeObjectURL(url);
+
+    } catch (error) {
+        alert('Error al descargar el certificado');
+        console.error(error);
+    }
+}
+
+async function generarCertificado(idEvento) {
+    try {
+        const respuesta = await fetch(`http://localhost:3000/api/certificados/${idEvento}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        const datos = await respuesta.json();
+
+        if (respuesta.ok) {
+            if (datos.url_certificado) {
+                alert(`Certificado generado correctamente. Código: ${datos.codigo_certificado}`);
+                descargarPDF(datos.url_certificado);
+            } else if (datos.certificado && datos.certificado.url_certificado) {
+                alert(`Certificado ya generado. Código: ${datos.certificado.codigo_certificado}`);
+                descargarPDF(datos.certificado.url_certificado);
+            } else {
+                alert(datos.mensaje);
+            }
+        } else {
+            alert(datos.mensaje);
+        }
+
+    } catch (error) {
+        alert('Error al generar certificado');
+        console.error(error);
+    }
+}
+
+    async function generarCertificado(idEvento) {
+        try {
+            const respuesta = await fetch(`http://localhost:3000/api/certificados/${idEvento}`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            const datos = await respuesta.json();
+
+            if (respuesta.ok) {
+                if (datos.url_certificado) {
+                    alert(`Certificado generado correctamente. Código: ${datos.codigo_certificado}`);
+                    descargarPDF(datos.url_certificado);
+                } else if (datos.certificado && datos.certificado.url_certificado) {
+                    alert(`Certificado ya generado. Código: ${datos.certificado.codigo_certificado}`);
+                    descargarPDF(datos.certificado.url_certificado);
                 } else {
                     alert(datos.mensaje);
                 }
-
-            } catch (error) {
-                alert('Error al generar certificado');
-                console.error(error);
+            } else {
+                alert(datos.mensaje);
             }
+
+        } catch (error) {
+            alert('Error al generar certificado');
+            console.error(error);
         }
+    }
 
         cargarEventosInscritos();
     </script>

@@ -1,5 +1,8 @@
 const express = require('express');
+const path = require('path');
 const pool = require('../db');
+
+const generarCertificadoPDF = require('../utils/generarCertificado');
 
 const verificarToken = require('../middleware/auth.middleware');
 
@@ -11,16 +14,20 @@ router.post('/:id_evento', verificarToken, async (req, res) => {
         const { id_evento } = req.params;
         const id_usuario = req.usuario.id_usuario;
 
-        // Verificar si el usuario puede recibir certificado
         const [datos] = await pool.query(
             `SELECT 
                 i.id_inscripcion,
                 i.estado AS estado_inscripcion,
                 i.asistencia,
-                e.titulo,
-                e.estado AS estado_evento
+                e.titulo AS titulo_evento,
+                e.fecha_inicio,
+                e.lugar,
+                e.estado AS estado_evento,
+                u.nombre,
+                u.apellido
             FROM inscripciones i
             INNER JOIN eventos e ON i.id_evento = e.id_evento
+            INNER JOIN usuarios u ON i.id_usuario = u.id_usuario
             WHERE i.id_usuario = ? AND i.id_evento = ?`,
             [id_usuario, id_evento]
         );
@@ -51,7 +58,6 @@ router.post('/:id_evento', verificarToken, async (req, res) => {
             });
         }
 
-        // Verificar si ya existe certificado
         const [certificadoExistente] = await pool.query(
             'SELECT * FROM certificados WHERE id_usuario = ? AND id_evento = ?',
             [id_usuario, id_evento]
@@ -66,16 +72,32 @@ router.post('/:id_evento', verificarToken, async (req, res) => {
 
         const codigo = `CERT-${id_usuario}-${id_evento}-${Date.now()}`;
 
+        const fechaEvento = new Date(inscripcion.fecha_inicio).toLocaleDateString();
+        const fechaGeneracion = new Date().toLocaleDateString();
+
+        const pdf = await generarCertificadoPDF({
+            nombre: inscripcion.nombre,
+            apellido: inscripcion.apellido,
+            titulo_evento: inscripcion.titulo_evento,
+            fecha_evento: fechaEvento,
+            lugar: inscripcion.lugar,
+            codigo_certificado: codigo,
+            fecha_generacion: fechaGeneracion
+        });
+
+        const urlCertificado = `/api/certificados/descargar/${pdf.nombreArchivo}`;
+
         await pool.query(
             `INSERT INTO certificados 
             (id_usuario, id_evento, codigo_certificado, url_certificado)
             VALUES (?, ?, ?, ?)`,
-            [id_usuario, id_evento, codigo, null]
+            [id_usuario, id_evento, codigo, urlCertificado]
         );
 
         res.status(201).json({
             mensaje: 'Certificado generado correctamente',
-            codigo_certificado: codigo
+            codigo_certificado: codigo,
+            url_certificado: urlCertificado
         });
 
     } catch (error) {
@@ -84,6 +106,15 @@ router.post('/:id_evento', verificarToken, async (req, res) => {
             error: error.message
         });
     }
+});
+
+// Descargar certificado
+router.get('/descargar/:archivo', verificarToken, (req, res) => {
+    const { archivo } = req.params;
+
+    const rutaArchivo = path.join(__dirname, '../../certificados', archivo);
+
+    res.download(rutaArchivo);
 });
 
 module.exports = router;
