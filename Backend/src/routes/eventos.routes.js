@@ -23,6 +23,23 @@ router.get('/', async (req, res) => {
     }
 });
 
+// Listar todos los eventos - solo admin
+router.get('/admin/todos', verificarToken, verificarAdmin, async (req, res) => {
+    try {
+        const [eventos] = await pool.query(
+            'SELECT * FROM eventos ORDER BY fecha_inicio DESC'
+        );
+
+        res.json(eventos);
+
+    } catch (error) {
+        res.status(500).json({
+            mensaje: 'Error al obtener eventos',
+            error: error.message
+        });
+    }
+});
+
 // Crear evento - solo admin
 router.post('/', verificarToken, verificarAdmin, async (req, res) => {
     try {
