@@ -1,6 +1,5 @@
 const token = localStorage.getItem('token');
 const usuarioGuardado = localStorage.getItem('usuario');
-const nombrePerfil = document.querySelector('.nombre-perfil');
 
 if (!token || !usuarioGuardado) {
     alert('Debes iniciar sesión');
@@ -8,13 +7,28 @@ if (!token || !usuarioGuardado) {
 }
 
 const usuario = JSON.parse(usuarioGuardado);
-nombrePerfil.textContent = usuario.nombre;
 
 if (usuario.rol !== 'admin') {
     alert('No tienes permisos para ver esta página');
     window.location.href = 'eventos.html';
-} else {
-    cargarEstadisticas();
+}
+
+const btnPerfil = document.getElementById('btn-abrir-perfil');
+const profileCard = document.getElementById('profile-card');
+const btnCerrarSesion = document.getElementById('btn-cerrar-sesion');
+
+if (btnPerfil && profileCard) {
+    btnPerfil.addEventListener('click', () => {
+        profileCard.classList.toggle('profile-card-visible');
+    });
+}
+
+if (btnCerrarSesion) {
+    btnCerrarSesion.addEventListener('click', () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('usuario');
+        window.location.href = 'login.html';
+    });
 }
 
 async function cargarEstadisticas() {
@@ -48,3 +62,5 @@ async function cargarEstadisticas() {
         console.error(error);
     }
 }
+
+cargarEstadisticas();

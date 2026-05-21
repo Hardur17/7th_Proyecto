@@ -2,12 +2,24 @@ const certificadosLista = document.getElementById('certificados-lista');
 const nombrePerfil = document.querySelector('.nombre-perfil');
 const linksAdmin = document.querySelectorAll('.link-admin');
 
+const btnPerfil = document.getElementById('btn-abrir-perfil');
+const profileCard = document.getElementById('profile-card');
+const btnCerrarSesion = document.getElementById('btn-cerrar-sesion');
+
 const token = localStorage.getItem('token');
 const usuarioGuardado = localStorage.getItem('usuario');
 
+if (!token || !usuarioGuardado) {
+    alert('Debes iniciar sesión');
+    window.location.href = 'login.html';
+}
+
 if (usuarioGuardado) {
     const usuario = JSON.parse(usuarioGuardado);
-    nombrePerfil.textContent = usuario.nombre;
+
+    if (nombrePerfil) {
+        nombrePerfil.textContent = usuario.nombre;
+    }
 
     if (usuario.rol !== 'admin') {
         linksAdmin.forEach(link => {
@@ -16,9 +28,18 @@ if (usuarioGuardado) {
     }
 }
 
-if (!token) {
-    alert('Debes iniciar sesión');
-    window.location.href = 'login.html';
+if (btnPerfil && profileCard) {
+    btnPerfil.addEventListener('click', () => {
+        profileCard.classList.toggle('profile-card-visible');
+    });
+}
+
+if (btnCerrarSesion) {
+    btnCerrarSesion.addEventListener('click', () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('usuario');
+        window.location.href = 'login.html';
+    });
 }
 
 async function cargarEventosInscritos() {

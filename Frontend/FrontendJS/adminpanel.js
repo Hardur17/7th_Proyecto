@@ -1,24 +1,40 @@
 const token = localStorage.getItem('token');
 const usuarioGuardado = localStorage.getItem('usuario');
 
-const nombrePerfil = document.querySelector('.nombre-perfil');
-const tablaEventos = document.getElementById('tabla-eventos');
-const btnCrearEvento = document.getElementById('btn-crear-evento');
-const btnCancelar = document.getElementById('btn-cancelar');
-const formCard = document.getElementById('form-card');
-const formEvento = document.getElementById('formEvento');
-
 if (!token || !usuarioGuardado) {
     alert('Debes iniciar sesión');
     window.location.href = 'login.html';
 }
 
 const usuario = JSON.parse(usuarioGuardado);
-nombrePerfil.textContent = usuario.nombre;
 
 if (usuario.rol !== 'admin') {
     alert('No tienes permisos para acceder al panel de administración');
     window.location.href = 'eventos.html';
+}
+
+const tablaEventos = document.getElementById('tabla-eventos');
+const btnCrearEvento = document.getElementById('btn-crear-evento');
+const btnCancelar = document.getElementById('btn-cancelar');
+const formCard = document.getElementById('form-card');
+const formEvento = document.getElementById('formEvento');
+
+const btnPerfil = document.getElementById('btn-abrir-perfil');
+const profileCard = document.getElementById('profile-card');
+const btnCerrarSesion = document.getElementById('btn-cerrar-sesion');
+
+if (btnPerfil && profileCard) {
+    btnPerfil.addEventListener('click', () => {
+        profileCard.classList.toggle('profile-card-visible');
+    });
+}
+
+if (btnCerrarSesion) {
+    btnCerrarSesion.addEventListener('click', () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('usuario');
+        window.location.href = 'login.html';
+    });
 }
 
 btnCrearEvento.addEventListener('click', () => {
@@ -66,11 +82,11 @@ async function cargarEventosAdmin() {
                 <td>${evento.cupos}</td>
                 <td>
                     ${
-                       evento.estado === 'cancelado'
-                             ? 'Cancelado'
-                             : evento.estado === 'finalizado'
-                             ? ''
-                          : `<button class="btn btn-secondary" onclick="cancelarEvento(${evento.id_evento})">Cancelar</button>`
+                        evento.estado === 'cancelado'
+                        ? 'Cancelado'
+                        : evento.estado === 'finalizado'
+                            ? ''
+                            : `<button class="btn btn-secondary" onclick="cancelarEvento(${evento.id_evento})">Cancelar</button>`
                     }
                 </td>
             `;
