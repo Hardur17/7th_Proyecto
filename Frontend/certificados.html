@@ -26,17 +26,17 @@
     <aside class="sidebar">
         <nav class="sidebar-nav">
             <a href="eventos.html">Eventos y Hackatones</a>
-            <a href="estadisticas.html">Estadísticas</a>
+            <a href="estadisticas.html" class="link-admin">Estadísticas</a>
             <a href="historial.html">Historial de Participaciones</a>
             <a href="certificados.html">Certificados</a>
-            <a href="adminpanel.html">Panel de Administración</a>
+            <a href="adminpanel.html" class="link-admin">Panel de Administración</a>
         </nav>
     </aside>
 
     <main class="dashboard-main">
         <section class="page-header">
             <h1>Certificados</h1>
-            <p>Genera tus certificados cuando el evento haya finalizado y tengas asistencia registrada</p>
+            <p>Genera tus certificados cuando el evento haya finalizado</p>
         </section>
 
         <section class="cards-grid" id="certificados-lista">
@@ -212,5 +212,6 @@ async function generarCertificado(idEvento) {
 
         cargarEventosInscritos();
     </script>
+    <script src="FrontendJS/certificados.js"></script>
 </body>
 </html>
