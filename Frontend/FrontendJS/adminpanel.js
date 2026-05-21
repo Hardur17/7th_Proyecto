@@ -66,9 +66,11 @@ async function cargarEventosAdmin() {
                 <td>${evento.cupos}</td>
                 <td>
                     ${
-                        evento.estado === 'cancelado'
-                        ? 'Cancelado'
-                        : `<button class="btn btn-secondary" onclick="cancelarEvento(${evento.id_evento})">Cancelar</button>`
+                       evento.estado === 'cancelado'
+                             ? 'Cancelado'
+                             : evento.estado === 'finalizado'
+                             ? ''
+                          : `<button class="btn btn-secondary" onclick="cancelarEvento(${evento.id_evento})">Cancelar</button>`
                     }
                 </td>
             `;
