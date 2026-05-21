@@ -152,22 +152,52 @@ body {
 }
 
 .perfil {
+    position: relative;
     display: inline-flex;
     align-items: center;
     gap: 0.6rem;
     color: var(--color-blanco);
 }
 
-.avatar-perfil {
-    width: 40px;
-    height: 40px;
-    border-radius: 999px;
-    border: 2px solid rgba(255,255,255,0.8);
+.perfil-btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.perfil-icon {
+    width: 35px;
+    height: 35px;
+}
+
+.profile-card {
+    display: none;
+    position: absolute;
+    text-align: center;
+    top: 100%;
+    right: 0;
+    width: 400%;
+    height: auto;
+    backdrop-filter: blur(12px);
+    background: var(#faf5fa);
+    border-radius: 20px;
+    padding: 1.25rem;
+    margin-top: 1.25rem;
+    box-shadow: 0 12px 24px rgba(17, 57, 116, 0.08);
+    border: 1px solid rgba(15, 98, 254, 0.12);
+}
+
+.profile-card-visible {
+    display: block;
+}
+
+.nav-profile {
+    background-color: red;
 }
 
 .sidebar {
     position: fixed;
-    top: 72px;
+    top: 67px;
     left: 0;
     width: 260px;
     height: calc(100vh - 72px);
@@ -278,6 +308,10 @@ body {
     color: var(--color-blanco);
 }
 
+.btn-secondary {
+    margin-top: 0.75rem;
+}
+
 .stats-grid {
     display: grid;
     gap: 1rem;
@@ -370,9 +404,52 @@ body {
     background: #f6fbff;
 }
 
+.form-card {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(12px);
+    background: var(#faf5fa);
+    border-radius: 20px;
+    padding: 1.25rem;
+    margin-top: 1.25rem;
+    box-shadow: 0 12px 24px rgba(17, 57, 116, 0.08);
+    border: 1px solid rgba(15, 98, 254, 0.12);
+}
+
+.form-card-visible {
+    display: block;
+}
+
+.form-evento {
+    background: var(--color-blanco);
+    border-radius: 20px;
+    padding: 1.25rem;
+    margin-top: 1.25rem;
+    box-shadow: 0 12px 24px rgba(17, 57, 116, 0.08);
+    border: 1px solid rgba(15, 98, 254, 0.12);
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.form-evento input, select{
+    width: 100%;
+    padding: 0.75rem 0.9rem;
+    border-radius: 12px;
+    border: 1px solid #c6d7ee;
+    background: #fff;
+    color: #0f2f50;
+    font-size: 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
 @media (max-width: 700px) {
     .sidebar {
-        top: 64px;
+        top: 65px;
     }
 
     .dashboard-main {

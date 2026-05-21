@@ -11,8 +11,14 @@
         <div class="logo">Gestor de Eventos y Hackatones</div>
         <nav class="top-nav">
             <div class="perfil">
-                <span class="nombre-perfil">Usuario</span>
-                <img class="avatar-perfil" alt="Avatar usuario">
+                <button class="perfil-btn" id="btn-abrir-perfil">
+                        <img src="Images/account_circle_24dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="Perfil" class="perfil-icon">
+                </button>
+                <section class="profile-card" id="profile-card">
+                    <button type="button" id="btn-cambiar-nombre" class="btn btn-secondary">Cambiar nombre de usuario</button><br>
+                    <button type="button" id="btn-cambiar-contra" class="btn btn-secondary">Cambiar contraseña</button><br>
+                    <button type="button" id="btn-cerrar-sesion" class="btn btn-secondary">Cerrar sesión</button> 
+                </section>
             </div>
         </nav>
     </header>
@@ -23,6 +29,7 @@
             <a href="estadisticas.html">Estadísticas</a>
             <a href="historial.html">Historial de Participaciones</a>
             <a href="certificados.html">Certificados</a>
+            <a href="adminpanel.html">Panel de Administración</a>
         </nav>
     </aside>
 
@@ -37,6 +44,15 @@
     </main>
 
     <script>
+        //eventos
+        const btnPerfil = document.getElementById('btn-abrir-perfil');
+        const profileCard = document.getElementById('profile-card');
+
+         btnPerfil.addEventListener('click', () => {
+            profileCard.classList.toggle('profile-card-visible');
+        });
+        //
+
         const certificadosLista = document.getElementById('certificados-lista');
         const nombrePerfil = document.querySelector('.nombre-perfil');
 
