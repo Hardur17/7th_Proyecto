@@ -4,15 +4,25 @@ const jwt = require('jsonwebtoken');
 
 const pool = require('../db');
 
+const verificarToken = require('../middleware/auth.middleware');
+
 const router = express.Router();
 
 
 // Registro de usuarios
 router.post('/register', async (req, res) => {
+
     try {
-        const { nombre, apellido, correo, password } = req.body;
+
+        const {
+            nombre,
+            apellido,
+            correo,
+            password
+        } = req.body;
 
         if (!nombre || !apellido || !correo || !password) {
+
             return res.status(400).json({
                 mensaje: 'Todos los campos son obligatorios'
             });
@@ -24,6 +34,7 @@ router.post('/register', async (req, res) => {
         );
 
         if (usuarioExistente.length > 0) {
+
             return res.status(409).json({
                 mensaje: 'El correo ya está registrado'
             });
@@ -32,10 +43,18 @@ router.post('/register', async (req, res) => {
         const passwordEncriptada = await bcrypt.hash(password, 10);
 
         await pool.query(
-            `INSERT INTO usuarios 
-            (nombre, apellido, correo, password, rol) 
-            VALUES (?, ?, ?, ?, ?)`,
-            [nombre, apellido, correo, passwordEncriptada, 'usuario']
+            `
+            INSERT INTO usuarios
+            (nombre, apellido, correo, password, rol)
+            VALUES (?, ?, ?, ?, ?)
+            `,
+            [
+                nombre,
+                apellido,
+                correo,
+                passwordEncriptada,
+                'usuario'
+            ]
         );
 
         res.status(201).json({
@@ -43,6 +62,7 @@ router.post('/register', async (req, res) => {
         });
 
     } catch (error) {
+
         console.error('Error en registro:', error);
 
         res.status(500).json({
@@ -52,12 +72,19 @@ router.post('/register', async (req, res) => {
     }
 });
 
+
 // Login de usuarios
 router.post('/login', async (req, res) => {
+
     try {
-        const { correo, password } = req.body;
+
+        const {
+            correo,
+            password
+        } = req.body;
 
         if (!correo || !password) {
+
             return res.status(400).json({
                 mensaje: 'Correo y contraseña son obligatorios'
             });
@@ -69,6 +96,7 @@ router.post('/login', async (req, res) => {
         );
 
         if (usuarios.length === 0) {
+
             return res.status(401).json({
                 mensaje: 'Credenciales inválidas'
             });
@@ -76,9 +104,13 @@ router.post('/login', async (req, res) => {
 
         const usuario = usuarios[0];
 
-        const passwordValida = await bcrypt.compare(password, usuario.password);
+        const passwordValida = await bcrypt.compare(
+            password,
+            usuario.password
+        );
 
         if (!passwordValida) {
+
             return res.status(401).json({
                 mensaje: 'Credenciales inválidas'
             });
@@ -109,6 +141,7 @@ router.post('/login', async (req, res) => {
         });
 
     } catch (error) {
+
         console.error('Error en login:', error);
 
         res.status(500).json({
@@ -117,5 +150,136 @@ router.post('/login', async (req, res) => {
         });
     }
 });
+
+
+// Actualizar nombre y apellido
+router.put(
+    '/actualizar-nombre',
+    verificarToken,
+    async (req, res) => {
+
+        try {
+
+            const {
+                nombre,
+                apellido
+            } = req.body;
+
+            if (!nombre || !apellido) {
+
+                return res.status(400).json({
+                    mensaje: 'Todos los campos son obligatorios'
+                });
+            }
+
+            await pool.query(
+                `
+                UPDATE usuarios
+                SET nombre = ?, apellido = ?
+                WHERE id_usuario = ?
+                `,
+                [
+                    nombre,
+                    apellido,
+                    req.usuario.id_usuario
+                ]
+            );
+
+            res.json({
+                mensaje: 'Nombre actualizado correctamente'
+            });
+
+        } catch (error) {
+
+            console.error(
+                'Error actualizando nombre:',
+                error
+            );
+
+            res.status(500).json({
+                mensaje: 'Error al actualizar nombre',
+                error: error.message
+            });
+        }
+    }
+);
+
+// Actualizar contraseña
+router.put(
+    '/actualizar-password',
+    verificarToken,
+    async (req, res) => {
+
+        try {
+
+            const {
+                passwordActual,
+                passwordNueva
+            } = req.body;
+
+            if (!passwordActual || !passwordNueva) {
+
+                return res.status(400).json({
+                    mensaje: 'Todos los campos son obligatorios'
+                });
+            }
+
+            const [usuarios] = await pool.query(
+                `
+                SELECT * FROM usuarios
+                WHERE id_usuario = ?
+                `,
+                [req.usuario.id_usuario]
+            );
+
+            const usuario = usuarios[0];
+
+            const passwordCorrecta = await bcrypt.compare(
+                passwordActual,
+                usuario.password
+            );
+
+            if (!passwordCorrecta) {
+
+                return res.status(401).json({
+                    mensaje: 'La contraseña actual es incorrecta'
+                });
+            }
+
+            const nuevaPasswordEncriptada = await bcrypt.hash(
+                passwordNueva,
+                10
+            );
+
+            await pool.query(
+                `
+                UPDATE usuarios
+                SET password = ?
+                WHERE id_usuario = ?
+                `,
+                [
+                    nuevaPasswordEncriptada,
+                    req.usuario.id_usuario
+                ]
+            );
+
+            res.json({
+                mensaje: 'Contraseña actualizada correctamente'
+            });
+
+        } catch (error) {
+
+            console.error(
+                'Error actualizando contraseña:',
+                error
+            );
+
+            res.status(500).json({
+                mensaje: 'Error al actualizar contraseña',
+                error: error.message
+            });
+        }
+    }
+);
 
 module.exports = router;
