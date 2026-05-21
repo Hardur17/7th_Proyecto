@@ -1,5 +1,6 @@
 const certificadosLista = document.getElementById('certificados-lista');
 const nombrePerfil = document.querySelector('.nombre-perfil');
+const linksAdmin = document.querySelectorAll('.link-admin');
 
 const token = localStorage.getItem('token');
 const usuarioGuardado = localStorage.getItem('usuario');
@@ -7,6 +8,12 @@ const usuarioGuardado = localStorage.getItem('usuario');
 if (usuarioGuardado) {
     const usuario = JSON.parse(usuarioGuardado);
     nombrePerfil.textContent = usuario.nombre;
+
+    if (usuario.rol !== 'admin') {
+        linksAdmin.forEach(link => {
+            link.style.display = 'none';
+        });
+    }
 }
 
 if (!token) {
